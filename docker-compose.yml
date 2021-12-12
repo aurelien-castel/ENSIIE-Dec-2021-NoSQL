@@ -1,0 +1,11 @@
+version: "3.8"
+   
+services:
+  web:
+    build: ./app
+    volumes:
+      - ./app:/usr/src/app
+    ports:
+      - 8080:80
+    environment: 
+      - PYTHONUNBUFFERED=1
