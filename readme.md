@@ -1,4 +1,4 @@
 ```
 docker-compose up
-localhost:8001/
+http://172.21.0.4:80/
 ```
