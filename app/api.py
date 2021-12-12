@@ -46,9 +46,9 @@ def redis_increment():
 
 @app.route('/')
 def home():
-	if session.get('logged_in') :
-		return redirect(url_for('todo',name = session.get('todo')))
-	return redirect(url_for('login'))
+    #if session.get('logged_in') :
+    #    return redirect(url_for('todo',name = session.get('todo')))
+    return redirect(url_for('login'))
 
 @app.route('/<name>')
 def todo(name):

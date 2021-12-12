@@ -6,19 +6,14 @@
 {% endblock %}
 
 {% block content %}
-        <div class="container gigamargin" align="center">
-            <div class="row justify-content-md-center">
-                <div class="col-lg-4">
-                    <form method="POST" action="/login">
-                    <div class="form-group connexion text-center">
-                        <label for="name" class="text-center"><h2>Login</h2></label>
-                        <input class="form-control connexion" name="name" id="name" aria-describedby="login">
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary connexion">Connexion</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="container gigamargin"></div>
+<center>
+    <form>
+  <div class="form-group">
+    <br>
+    <label style="font-size:25px;color:black" or="exampleFormControlTextarea1">Entrez du texte :</label>
+    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+  </div>
+  <button class="btn btn-secondary btn-lg" type="submit">Envoyer</button>
+</form>
+<center>
 {% endblock %}
