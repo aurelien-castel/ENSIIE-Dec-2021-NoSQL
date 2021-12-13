@@ -1,6 +1,29 @@
 version: "3.7"
    
 services:
+  psql:
+    image: postgres
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - psqldata:/var/lib/postgresql/data
+      - ./db/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+    ports:
+      - 5432:5432
+  mongo:
+    image: mongo
+    environment:
+      - MONGO_INITDB_DATABASE=mongo
+      - MONGO_INITDB_ROOT_USERNAME=mongo
+      - MONGO_INITDB_ROOT_PASSWORD=mongo
+      - MONGODB_DATA_DIR=/data/db
+      - MONDODB_LOG_DIR=/dev/null
+    volumes:
+      - mongodbdata:/data/db
+    ports:
+      - 8081:8081
   web:
     build: ./app
     volumes:
@@ -9,3 +32,9 @@ services:
       - 8080:80
     environment: 
       - PYTHONUNBUFFERED=1
+
+volumes:
+  mongodbdata:
+    driver: local
+  psqldata:
+    driver: local

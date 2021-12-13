@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+
+{% block navbar %}
+    {% include 'nav-default.html' %}
+{% endblock %}
+
+{% block content %}
+<center>
+    <form method="POST" action="/submit">
+  <div class="form-group">
+    <br>
+    <label style="font-size:25px;color:black" for="text">Entrez du texte :</label>
+    <textarea class="form-control" id="text" name="text"></textarea>
+  </div>
+  <div class="mb-3">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <label class="input-group-text font-weight-bold" for="database">Bases de données</label>
+        </div>
+        <select class="custom-select" id="database" name="database" required>
+          <option value="1">PostgreSQL</option>
+          <option value="2">MongoDB</option>
+        </select>
+      </div>
+    </div>
+  <button class="btn btn-secondary btn-lg" type="submit">Envoyer</button>
+</form>
+<center>
+{% endblock %}
