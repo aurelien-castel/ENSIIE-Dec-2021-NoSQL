@@ -10,23 +10,17 @@ from bson.objectid import ObjectId
 # initialisation de l'application
 app = Flask(__name__)
 databases= {1: 'postgres', 2: 'mongodb'}
+import time
+time.sleep(5)
 conn_mon = None
-#conn_psq = psycopg2.connect(host="psql",database="postgres",user="postgres",password="postgres",port='5432')
+conn_psq = psycopg2.connect(host="psql",database="cookiepost",user="postgres",password="postgres",port='5432')
+cursor_psq = conn_psq.cursor()
 
 def get_mongodb_connexion():
 	global conn_mon
 	if conn_mon is None:
 		conn_mon = MongoClient('mongodb://mongo:mongo@mongo')
 	return conn_mon
-
-def redis_increment():
-	r = RedisD.Redis(host='redis',port='6379',db=0)
-	try:
-		if r.ping():
-			r.incr('compteur')
-			return int(r.get('compteur'))
-	except:
-		return 0
 
 @app.route('/')
 def home():
@@ -41,15 +35,9 @@ def submit():
 	text = request.form["text"]
 	database_num = request.form["database"]
 	if databases[int(database_num)] == databases[1] :
-		#get_neo4J_connexion().session().write_transaction(create_post_it, user, title, todo_date, description, importance)
-		#app.logger.info("add post-it neo4j")
-		print("123")
+		create_text_postgresql(text)
 	elif databases[int(database_num)] == databases[2] :
-		create_post_it_mongo(text)
-		app.logger.info("add post-it mongo")
-	else :
-		#do some psql
-		app.logger.info("NON add post-it psql")
+		create_text_mongo(text)
 
 	return redirect(url_for('form', name = "cookie"))
 
@@ -64,7 +52,7 @@ def postgres():
 			'psql': ['fail']
 		}
 
-def create_post_it(tx, userName, postItName, toDoDate, description, importance):
+def create_text(tx, userName, postItName, toDoDate, description, importance):
     tx.run("Match(u:User {name : $userName})"
         "CREATE(p:PostIt {uuid : apoc.create.uuid(),"
 			"name: $postItName,"
@@ -81,15 +69,26 @@ def mongodbGetUser(name):
 	user = { "name" : name }
 	collection.User.update(user,{ "$set" :user}, upsert=True)
 
-def create_post_it_mongo(text):
-	conn_mon=get_mongodb_connexion()
-	db=conn_mon.ToutDoux
-	now = datetime.datetime.now()
-	nowDate = str(now.year) + "-" + str(now.month) + "-" + str(now.day)
-	app.logger.info(nowDate)
-	postit={"text": text, "creationDate": nowDate}
-	app.logger.info(postit)
+def create_text_postgresql(text):
+	try:
+		cursor_psq.execute("INSERT INTO cookiepost (text, date) VALUES (%s, %s)", (text,date))
+		conn_psq.commit()
+		return "True"
+	except:
+		return "False"
+	#now = datetime.datetime.now()
+	#nowDate = str(now.year) + "-" + str(now.month) + "-" + str(now.day) + "-" + str(now.hour) + "-" + str(now.minute) + "-" + str(now.second)
+	postit={"text": text}
 	db.PostIt.insert_one(postit)
+
+def create_text_mongo(text):
+	conn_mon=get_mongodb_connexion()
+	db=conn_mon.cookiepost
+	#now = datetime.datetime.now()
+	#nowDate = str(now.year) + "-" + str(now.month) + "-" + str(now.day)
+	cookie={"text": text}
+	print(db.cookie.insert_one(cookie))
+	print("################################################################################################")
 
 @app.route('/mongo')
 def mongo():

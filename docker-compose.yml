@@ -2,9 +2,9 @@ version: "3.7"
    
 services:
   psql:
-    image: postgres
+    image: postgres:9.6.24
     environment:
-      - POSTGRES_DB=postgres
+      - POSTGRES_DB=cookiepost
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
@@ -12,6 +12,7 @@ services:
       - ./db/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
     ports:
       - 5432:5432
+
   mongo:
     image: mongo
     environment:
@@ -24,12 +25,15 @@ services:
       - mongodbdata:/data/db
     ports:
       - 8081:8081
+
   web:
     build: ./app
     volumes:
       - ./app:/usr/src/app
     ports:
       - 8080:80
+    expose:
+      - 5432
     environment: 
       - PYTHONUNBUFFERED=1
 

@@ -1,4 +1,5 @@
-CREATE DATABASE cookiepost;
+SELECT 'CREATE DATABASE cookiepost'
+WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'cookiepost')\gexec
 \c cookiepost;
 
 CREATE TABLE IF NOT EXISTS cookiepost (

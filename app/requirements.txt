@@ -2,5 +2,4 @@ Flask
 flask-restful
 redis
 psycopg2-binary>=2.8
-neo4j
 pymongo
