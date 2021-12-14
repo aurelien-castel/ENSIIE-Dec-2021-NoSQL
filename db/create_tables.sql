@@ -4,6 +4,5 @@ WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'cookiepost')\gexec
 
 CREATE TABLE IF NOT EXISTS cookiepost (
   id BIGSERIAL PRIMARY KEY,
-  text text,
-  date timestamp
+  text text
 );

@@ -13,8 +13,8 @@ databases= {1: 'postgres', 2: 'mongodb'}
 import time
 time.sleep(5)
 conn_mon = None
-conn_psq = psycopg2.connect(host="psql",database="cookiepost",user="postgres",password="postgres",port='5432')
-cursor_psq = conn_psq.cursor()
+#conn_psq = psycopg2.connect(host="psql",database="cookiepost",user="postgres",password="postgres",port='5432')
+#cursor_psq = conn_psq.cursor()
 
 def get_mongodb_connexion():
 	global conn_mon
@@ -52,34 +52,15 @@ def postgres():
 			'psql': ['fail']
 		}
 
-def create_text(tx, userName, postItName, toDoDate, description, importance):
-    tx.run("Match(u:User {name : $userName})"
-        "CREATE(p:PostIt {uuid : apoc.create.uuid(),"
-			"name: $postItName,"
-            "creationDate : date(),"
-            "toDoDate : date($toDoDate),"
-            "isDone : false,"
-            "description : $description,"
-			"importance : $importance})"
-        "create (u)-[:haveToDo]->(p)", userName=userName, postItName=postItName, toDoDate=toDoDate, description=description, importance=importance)
-
-def mongodbGetUser(name):
-	conn_mon = get_mongodb_connexion()
-	collection = conn_mon.ToutDoux 
-	user = { "name" : name }
-	collection.User.update(user,{ "$set" :user}, upsert=True)
-
 def create_text_postgresql(text):
 	try:
-		cursor_psq.execute("INSERT INTO cookiepost (text, date) VALUES (%s, %s)", (text,date))
+		conn_psq = psycopg2.connect(host="psql",database="cookiepost",user="postgres",password="postgres",port='5432')
+		cursor_psq = conn_psq.cursor()
+		cursor_psq.execute("INSERT INTO cookiepost (text) VALUES ('"+text+"');", (text))
 		conn_psq.commit()
 		return "True"
 	except:
 		return "False"
-	#now = datetime.datetime.now()
-	#nowDate = str(now.year) + "-" + str(now.month) + "-" + str(now.day) + "-" + str(now.hour) + "-" + str(now.minute) + "-" + str(now.second)
-	postit={"text": text}
-	db.PostIt.insert_one(postit)
 
 def create_text_mongo(text):
 	conn_mon=get_mongodb_connexion()
@@ -87,8 +68,7 @@ def create_text_mongo(text):
 	#now = datetime.datetime.now()
 	#nowDate = str(now.year) + "-" + str(now.month) + "-" + str(now.day)
 	cookie={"text": text}
-	print(db.cookie.insert_one(cookie))
-	print("################################################################################################")
+	db.cookie.insert_one(cookie)
 
 @app.route('/mongo')
 def mongo():

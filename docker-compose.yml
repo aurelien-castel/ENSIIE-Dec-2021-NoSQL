@@ -1,6 +1,20 @@
 version: "3.7"
    
 services:
+  web:
+    build: ./app
+    volumes:
+      - ./app:/usr/src/app
+    ports:
+      - 8080:80
+    expose:
+      - 5432
+    environment: 
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - psql
+      - mongo
+
   psql:
     image: postgres:9.6.24
     environment:
@@ -25,17 +39,6 @@ services:
       - mongodbdata:/data/db
     ports:
       - 8081:8081
-
-  web:
-    build: ./app
-    volumes:
-      - ./app:/usr/src/app
-    ports:
-      - 8080:80
-    expose:
-      - 5432
-    environment: 
-      - PYTHONUNBUFFERED=1
 
 volumes:
   mongodbdata:
